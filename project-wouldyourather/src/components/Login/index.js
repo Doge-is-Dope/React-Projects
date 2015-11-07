@@ -40,7 +40,11 @@ const Login = (props) => {
       <Container className={styles.root}>
         <LoginHeader />
 
-        <Select value={userId} onChange={handleChange}>
+        <Select
+          className={styles.dropdown}
+          value={userId}
+          onChange={handleChange}
+        >
           {props.users.map((id) => (
             <MenuItem key={id} value={id}>
               {id}
@@ -71,8 +75,8 @@ const useStyles = makeStyles({
     height: "50vh",
   },
 
-  cardLogin: {
-    margin: 20,
+  dropdown: {
+    width: "100%",
   },
 });
 

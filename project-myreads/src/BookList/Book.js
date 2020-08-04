@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 
 class Book extends Component {
+  handleChange = (event) => {
+    const value = event.target.value;
+    if (this.props.onChangeBookshelf) {
+      this.props.onChangeBookshelf(this.props.book, value);
+    }
+  };
+
   render() {
-    const { bookCoverUrl, title, authors, onChangeBookshelf } = this.props;
+    const { book } = this.props;
 
     return (
       <div className="book">
@@ -12,12 +19,12 @@ class Book extends Component {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(http://books.google.com/books/content?${bookCoverUrl}&&source=gbs_api)`,
+              backgroundImage: `url(${book.imageLinks.thumbnail})`,
             }}
           />
 
           <div className="book-shelf-changer">
-            <select>
+            <select value={book.shelf} onChange={this.handleChange}>
               <option value="move" disabled>
                 Move to...
               </option>
@@ -28,8 +35,8 @@ class Book extends Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{title}</div>
-        <div className="book-authors">{authors}</div>
+        <div className="book-title">{book.title}</div>
+        <div className="book-authors">{book.authors}</div>
       </div>
     );
   }

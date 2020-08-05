@@ -24,7 +24,7 @@ class Book extends Component {
           />
 
           <div className="book-shelf-changer">
-            <select value={book.shelf} onChange={this.handleChange}>
+            <select value={book.shelf || "none"} onChange={this.handleChange}>
               <option value="move" disabled>
                 Move to...
               </option>
@@ -36,7 +36,12 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors}</div>
+        {book.authors &&
+          book.authors.map((author, index) => (
+            <div key={index} className="book-authors">
+              {author}
+            </div>
+          ))}
       </div>
     );
   }

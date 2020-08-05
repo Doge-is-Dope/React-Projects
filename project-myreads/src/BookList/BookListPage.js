@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import BookListHeader from "./BookListHeader";
 import Bookshelf from "./Bookshelf";
 import * as BooksAPI from "../BooksAPI";
 
@@ -32,7 +31,9 @@ class BookListPage extends Component {
     // console.log(this.state.books);
     return (
       <div className="list-books">
-        <BookListHeader />
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
 
         <div className="list-books-content">
           {shelfTitles.map((shelfTitle) => (

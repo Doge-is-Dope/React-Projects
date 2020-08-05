@@ -28,18 +28,17 @@ class SearchPage extends Component {
   };
 
   searchBook = (query) => {
-    BooksAPI.search(query)
-      .then((result) => {
-        console.log(result);
-        if (result instanceof Array) {
-          this.setState({ books: result });
-        } else {
-          this.setState({ books: [] });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    BooksAPI.search(query).then((books) => {
+      books && this.setState({ books });
+      console.log(books);
+    });
+  };
+
+  changeBookshelf = (book, shelf) => {
+    console.log(`book title: ${book.title}, shelf: ${shelf}`);
+    BooksAPI.update(book, shelf).then((result) => {
+      console.log(result);
+    });
   };
 
   render() {
@@ -63,11 +62,16 @@ class SearchPage extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {books.map((book) => (
-              <li key={book.id}>
-                <Book book={book} />
-              </li>
-            ))}
+            {query !== "" && !books.error
+              ? books.map((book) => (
+                  <li key={book.id}>
+                    <Book
+                      book={book}
+                      onChangeBookshelf={this.changeBookshelf.bind(this)}
+                    />
+                  </li>
+                ))
+              : query !== "" && <div>No books found</div>}
           </ol>
         </div>
       </div>

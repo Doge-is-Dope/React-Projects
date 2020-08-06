@@ -29,8 +29,22 @@ class SearchPage extends Component {
 
   searchBook = (query) => {
     BooksAPI.search(query).then((books) => {
-      books && this.setState({ books });
-      console.log(books);
+      books &&
+        this.setState({
+          books,
+        });
+      this.setBookShelf();
+    });
+  };
+
+  setBookShelf = () => {
+    const { books } = this.state;
+    const newBooks = books.map((book) => {
+      BooksAPI.get(book.id).then((result) => {
+        console.log(`title: ${result.title} shelf: ${result.shelf}`);
+      });
+
+      return books;
     });
   };
 

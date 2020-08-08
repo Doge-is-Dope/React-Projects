@@ -6,7 +6,7 @@ import Book from "../BookList/Book";
 class SearchPage extends Component {
   state = {
     query: "",
-    books: [],
+    searchedBooks: [],
   };
 
   handleChange = (query) => {
@@ -23,41 +23,48 @@ class SearchPage extends Component {
   clearQuery = () => {
     this.setState({
       query: "",
-      books: [],
+      searchedBooks: [],
     });
   };
 
   searchBook = (query) => {
     BooksAPI.search(query).then((books) => {
-      books &&
+      if (books !== undefined) {
         this.setState({
-          books,
+          searchedBooks: books,
         });
-      this.setBookShelf();
+      } else {
+        this.setState({
+          searchedBooks: [],
+        });
+      }
     });
   };
 
-  setBookShelf = () => {
-    const { books } = this.state;
-    const newBooks = books.map((book) => {
-      BooksAPI.get(book.id).then((result) => {
-        console.log(`title: ${result.title} shelf: ${result.shelf}`);
-      });
+  // setBookShelf = (books) => {
+  //   return books.map((book) => {
+  //     return this.getBookshelf(book);
+  //   });
+  // };
 
-      return books;
-    });
-  };
+  // getBookshelf = (book) => {
+  //   BooksAPI.get(book.id).then((result) => {
+  //     console.log(`getBookshelf: ${result.shelf}`);
+  //     return result;
+  //   });
+  // };
 
-  changeBookshelf = (book, shelf) => {
-    console.log(`book title: ${book.title}, shelf: ${shelf}`);
-    BooksAPI.update(book, shelf).then((result) => {
-      console.log(result);
-    });
-  };
+  // changeBookshelf = (book, shelf) => {
+  //   console.log(`book title: ${book.title}, shelf: ${shelf}`);
+  //   BooksAPI.update(book, shelf).then((result) => {
+  //     console.log(result);
+  //   });
+  // };
 
   render() {
-    const { query, books } = this.state;
-    // console.log(books);
+    const { query, searchedBooks } = this.state;
+    const { booksInList, onChangeBookShelf } = this.props;
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -76,12 +83,13 @@ class SearchPage extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {query !== "" && !books.error
-              ? books.map((book) => (
+            {query !== "" && !searchedBooks.error
+              ? searchedBooks.map((book) => (
                   <li key={book.id}>
                     <Book
                       book={book}
-                      onChangeBookshelf={this.changeBookshelf.bind(this)}
+                      booksInMyList={booksInList}
+                      onChangeBookshelf={onChangeBookShelf}
                     />
                   </li>
                 ))

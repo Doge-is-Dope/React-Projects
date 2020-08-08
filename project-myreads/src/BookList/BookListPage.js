@@ -1,34 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Bookshelf from "./Bookshelf";
-import * as BooksAPI from "../BooksAPI";
 
 class BookListPage extends Component {
   state = {
-    books: [],
     shelfTitles: ["Currently Reading", "Want to Read", "Read"],
   };
 
-  setupBooks = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-    });
-  };
-
-  changeBookshelf = (book, shelf) => {
-    console.log(`book title: ${book.title}, shelf: ${shelf}`);
-    BooksAPI.update(book, shelf).then(() => {
-      this.setupBooks();
-    });
-  };
-
-  componentDidMount() {
-    this.setupBooks();
-  }
-
   render() {
-    const { shelfTitles, books } = this.state;
-    // console.log(this.state.books);
+    const { shelfTitles } = this.state;
+    const { books, onChangeBookShelf } = this.props;
+
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -48,7 +30,7 @@ class BookListPage extends Component {
                     .join("")
                     .toLowerCase()
               )}
-              onChangeBookshelf={this.changeBookshelf}
+              onChangeBookshelf={onChangeBookShelf}
             />
           ))}
         </div>

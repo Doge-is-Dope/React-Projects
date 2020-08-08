@@ -12,7 +12,11 @@ class Bookshelf extends Component {
           <ol className="books-grid">
             {books.map((book) => (
               <li key={book.id}>
-                <Book book={book} onChangeBookshelf={onChangeBookshelf} />
+                <Book
+                  book={book}
+                  booksInMyList={books}
+                  onChangeBookshelf={onChangeBookshelf}
+                />
               </li>
             ))}
           </ol>

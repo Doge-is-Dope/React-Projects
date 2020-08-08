@@ -9,7 +9,16 @@ class Book extends Component {
   };
 
   render() {
-    const { book } = this.props;
+    const { book, booksInMyList } = this.props;
+
+    let defaultValue = "none";
+
+    for (let b of booksInMyList) {
+      if (b.id === book.id) {
+        defaultValue = b.shelf;
+        break;
+      }
+    }
 
     return (
       <div className="book">
@@ -24,7 +33,7 @@ class Book extends Component {
           />
 
           <div className="book-shelf-changer">
-            <select value={book.shelf || "none"} onChange={this.handleChange}>
+            <select defaultValue={defaultValue} onChange={this.handleChange}>
               <option value="move" disabled>
                 Move to...
               </option>

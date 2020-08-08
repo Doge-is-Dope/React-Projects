@@ -15,7 +15,6 @@ class App extends React.Component {
   };
 
   changeBookshelf = (book, shelf) => {
-    console.log(`book title: ${book.title}, shelf: ${shelf}`);
     BooksAPI.update(book, shelf).then(() => {
       this.setupBooks();
     });

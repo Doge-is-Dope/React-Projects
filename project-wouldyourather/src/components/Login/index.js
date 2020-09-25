@@ -31,17 +31,6 @@ const Login = (props) => {
     setToHome(userId ? false : true);
   };
 
-  const generateDropdownData = () => {
-    const { users } = this.props;
-
-    return users.map((user) => ({
-      key: user.id,
-      text: user.name,
-      value: user.id,
-      image: { avatar: true, src: user.avatarURL },
-    }));
-  };
-
   if (toHome === true) {
     // return <Redirect to="/" />;
   }
@@ -52,9 +41,11 @@ const Login = (props) => {
         <LoginHeader />
 
         <Select value={userId} onChange={handleChange}>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {props.users.map((id) => (
+            <MenuItem key={id} value={id}>
+              {id}
+            </MenuItem>
+          ))}
         </Select>
 
         <form onSubmit={handleSubmit}>
@@ -67,7 +58,12 @@ const Login = (props) => {
   );
 };
 
-export default connect()(Login);
+const mapStateToProps = ({ users }) => {
+  // console.log(`users: ${JSON.stringify(users)}`);
+  return {
+    users: Object.keys(users),
+  };
+};
 
 const useStyles = makeStyles({
   root: {
@@ -79,3 +75,5 @@ const useStyles = makeStyles({
     margin: 20,
   },
 });
+
+export default connect(mapStateToProps)(Login);

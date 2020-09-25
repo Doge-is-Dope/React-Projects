@@ -72,7 +72,6 @@ const mapStateToProps = ({ users }) => {
 const useStyles = makeStyles({
   root: {
     backgroundColor: "#cfe8fc",
-    height: "50vh",
   },
 
   dropdown: {

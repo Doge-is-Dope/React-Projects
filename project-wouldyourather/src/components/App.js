@@ -1,15 +1,47 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { handleInitialData } from "../actions/shared";
+import Nav from "./Nav";
 import Login from "./Login";
+import Home from "./Home";
+import Add from "./Add";
 
 class App extends Component {
   componentDidMount() {
     this.props.dispatch(handleInitialData());
   }
   render() {
-    return <>{this.props.loading === true ? null : <Login />}</>;
+    const { loggedIn } = this.props;
+
+    return (
+      <Router>
+        <Fragment>
+          <div className="container">
+            {loggedIn ? (
+              <div>
+                <Nav />
+                <div>
+                  <Route path="/" exact component={Home}></Route>
+                  <Route path="/new" exact component={Add}></Route>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Login />
+              </div>
+            )}
+          </div>
+        </Fragment>
+      </Router>
+    );
   }
 }
 
-export default connect()(App);
+function mapStateToProps({ authedUser }) {
+  return {
+    loggedIn: authedUser !== null,
+  };
+}
+
+export default connect(mapStateToProps)(App);

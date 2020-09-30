@@ -23,7 +23,7 @@ const Home = (props) => {
         </Tabs>
       </Paper>
 
-      <ul>
+      <Grid container direction="column" alignContent="center">
         {showAnswered
           ? answeredQuestions.map((questionId) => (
               <Question key={questionId} id={questionId} />
@@ -31,7 +31,7 @@ const Home = (props) => {
           : unansweredQuestions.map((questionId) => (
               <Question key={questionId} id={questionId} />
             ))}
-      </ul>
+      </Grid>
     </div>
   );
 };

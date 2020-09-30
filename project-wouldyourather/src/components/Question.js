@@ -1,7 +1,14 @@
 import React, { Component, useState } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { makeStyles, Grid, Typography, Paper, Avatar } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Typography,
+  Paper,
+  Avatar,
+  Button,
+} from "@material-ui/core";
 
 const Question = (props) => {
   const handleViewPoll = (e) => {
@@ -20,8 +27,8 @@ const Question = (props) => {
 
   return (
     // <Link to={`/questions/${id}`}>
-    <Paper className={classes.root}>
-      <Grid container spacing={6}>
+    <Paper className={classes.root} variant="outlined">
+      <Grid container spacing={2} className={classes.item}>
         <Grid item>
           <Avatar
             src={user.avatarURL}
@@ -30,28 +37,28 @@ const Question = (props) => {
           />
         </Grid>
 
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" color="primary">
-                {questionHeader} says
-              </Typography>
+        <Grid item xs={12} sm container direction="column">
+          <Typography gutterBottom variant="subtitle1" color="primary">
+            {questionHeader} says
+          </Typography>
 
-              <div className="verticle-divider"></div>
+          <div className="verticle-divider"></div>
 
-              <Typography variant="body2" gutterBottom>
-                Would you rather
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                .... {questionDescription} ....
-              </Typography>
-            </Grid>
-            <Grid item>
-              <div onClick={handleViewPoll} style={{ cursor: "pointer" }}>
-                View Poll
-              </div>
-            </Grid>
-          </Grid>
+          <Typography variant="body2" gutterBottom>
+            Would you rather
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            gutterBottom
+            style={{ marginBottom: 16 }}
+          >
+            .... {questionDescription} ....
+          </Typography>
+
+          <Button onClick={handleViewPoll} variant="outlined" color="primary">
+            View Poll
+          </Button>
         </Grid>
       </Grid>
     </Paper>
@@ -72,10 +79,19 @@ export default withRouter(connect(mapStateToProps)(Question));
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexFlow: 1,
+    display: "block",
+    maxWidth: "460px",
+    margin: theme.spacing(2),
+    transition: "0.3s",
+    "&:hover": {
+      boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+    },
   },
   avatar: {
     width: 128,
     height: 128,
+  },
+  item: {
+    padding: theme.spacing(2),
   },
 }));

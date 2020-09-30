@@ -1,41 +1,35 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { makeStyles, Paper, Tabs, Tab, Grid } from "@material-ui/core";
 import Question from "./Question";
 
 const Home = (props) => {
-  const [showAnswered, setShowAnswered] = useState(false);
-
+  const classes = useStyles();
+  const [showAnswered, setShowAnswered] = useState(0);
   const { unansweredQuestions, answeredQuestions } = props;
 
   return (
     <div>
-      <h3 className="center">Questions</h3>
-      <div className="btn-group">
-        <button
-          className={!showAnswered ? "btn-lft active" : "btn-lft"}
-          onClick={(event) => setShowAnswered(false)}
+      <Paper className={classes.root}>
+        <Tabs
+          value={showAnswered}
+          onChange={(event, newValue) => setShowAnswered(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          centered
         >
-          Unanswered
-        </button>
-        <button
-          className={showAnswered ? "btn-rght active" : "btn-rght"}
-          onClick={(event) => setShowAnswered(true)}
-        >
-          Answered
-        </button>
-      </div>
+          <Tab label="Unanswered" />
+          <Tab label="Answered" />
+        </Tabs>
+      </Paper>
 
-      <ul className="question-list">
+      <ul>
         {showAnswered
           ? answeredQuestions.map((questionId) => (
-              <li key={questionId}>
-                <Question id={questionId} />
-              </li>
+              <Question key={questionId} id={questionId} />
             ))
           : unansweredQuestions.map((questionId) => (
-              <li key={questionId}>
-                <Question id={questionId} />
-              </li>
+              <Question key={questionId} id={questionId} />
             ))}
       </ul>
     </div>
@@ -64,3 +58,9 @@ function mapStateToProps({ authedUser, questions }) {
 }
 
 export default connect(mapStateToProps)(Home);
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+});

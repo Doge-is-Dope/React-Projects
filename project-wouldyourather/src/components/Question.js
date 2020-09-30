@@ -1,54 +1,63 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
+import { makeStyles, Grid, Typography, Paper, Avatar } from "@material-ui/core";
 
-class Question extends Component {
-  handleViewPoll = (e) => {
+const Question = (props) => {
+  const handleViewPoll = (e) => {
     e.preventDefault();
-    const { id, history } = this.props;
+    const { id, history } = props;
     history.push({
       pathname: `/questions/${id}`,
       state: { id: id },
     });
   };
 
-  render() {
-    const { question, user, id } = this.props;
-    const questionHeader = user.name;
-    const questionDescription = question.optionOne.text.substring(0, 15);
+  const classes = useStyles();
+  const { question, user, id } = props;
+  const questionHeader = user.name;
+  const questionDescription = question.optionOne.text;
 
-    return (
-      <Link to={`/questions/${id}`}>
-        <div className="dashboard-list-container">
-          <div>
-            <div>
-              <div>{questionHeader} says:</div>
-            </div>
-            <div style={{ height: 110 }}>
-              <img src={user.avatarURL} style={{ height: 100, width: 100 }} />
+  return (
+    // <Link to={`/questions/${id}`}>
+    <Paper className={classes.root}>
+      <Grid container spacing={6}>
+        <Grid item>
+          <Avatar
+            src={user.avatarURL}
+            alt={`avatar of ${user.name}`}
+            className={classes.avatar}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm container>
+          <Grid item xs container direction="column" spacing={2}>
+            <Grid item xs>
+              <Typography gutterBottom variant="subtitle1" color="primary">
+                {questionHeader} says
+              </Typography>
+
               <div className="verticle-divider"></div>
-              <div className="dashboard-list-question-info description">
-                <div className="ui header">Would you rather</div>
-                <div style={{ marginBottom: 8 }}>
-                  .... {questionDescription} ....
-                </div>
-                <div
-                  fluid
-                  basic
-                  color="teal"
-                  style={{ height: 30, fontSize: 12 }}
-                  onClick={this.handleViewPoll}
-                >
-                  View Poll
-                </div>
+
+              <Typography variant="body2" gutterBottom>
+                Would you rather
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                .... {questionDescription} ....
+              </Typography>
+            </Grid>
+            <Grid item>
+              <div onClick={handleViewPoll} style={{ cursor: "pointer" }}>
+                View Poll
               </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Paper>
+    // </Link>
+  );
+};
 
 function mapStateToProps({ questions, users }, { id }) {
   const question = questions[id];
@@ -60,3 +69,13 @@ function mapStateToProps({ questions, users }, { id }) {
 }
 
 export default withRouter(connect(mapStateToProps)(Question));
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexFlow: 1,
+  },
+  avatar: {
+    width: 128,
+    height: 128,
+  },
+}));

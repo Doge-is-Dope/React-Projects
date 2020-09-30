@@ -5,8 +5,9 @@ import { Redirect, withRouter } from "react-router-dom";
 import { setAuthedUser } from "../actions/authedUser";
 
 const Login = (props) => {
-  const [userId, setUserId] = useState(-1);
+  const [userId, setUserId] = useState(null);
   const [toHome, setToHome] = useState(false);
+  const selected = userId ? userId : -1;
 
   const handleSelectionChanged = (event) => {
     const userId = event.target.value;
@@ -22,7 +23,7 @@ const Login = (props) => {
     dispatch(setAuthedUser(userId));
 
     setUserId(-1);
-    setToHome(userId ? false : true);
+    setToHome(true);
   };
 
   if (toHome) {
@@ -38,7 +39,7 @@ const Login = (props) => {
 
       <div>
         <select
-          value={userId}
+          value={selected}
           onChange={(event) => handleSelectionChanged(event)}
         >
           <option value={-1} disabled>

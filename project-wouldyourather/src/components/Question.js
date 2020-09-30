@@ -1,87 +1,62 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actions from "../actions/questions";
+import { Link, withRouter } from "react-router-dom";
 
 class Question extends Component {
-  handleOptionClicked = function (option) {
-    console.log(this.props);
-    const { answerQuestion, authedUser, question } = this.props;
-    const answer = option === 1 ? "optionOne" : "optionTwo";
-    answerQuestion(authedUser, question.id, answer);
+  handleViewPoll = (e) => {
+    e.preventDefault();
+    const { id, history } = this.props;
+    history.push({
+      pathname: `/questions/${id}`,
+      state: { id: id },
+    });
   };
 
   render() {
-    const { authedUser, question, users } = this.props;
-    const answers = Object.keys(users[authedUser].answers);
-    const answered = answers.indexOf(question.id) > -1 ? true : false;
-    const votesOptionOne = question.optionOne.votes.length;
-    const votesOptionTwo = question.optionTwo.votes.length;
-    const votesTotal = votesOptionOne + votesOptionTwo;
-    const percentVotesOptionOne =
-      (votesOptionOne / votesTotal).toFixed(2) * 100;
-    const percentVotesOptionTwo =
-      (votesOptionTwo / votesTotal).toFixed(2) * 100;
+    const { question, user, id } = this.props;
+    const questionHeader = user.name;
+    const questionDescription = question.optionOne.text.substring(0, 15);
 
     return (
-      <Link to={`/questions/${question.id}`} className="question">
-        <img
-          src={`/${users[question.author].avatarURL}`}
-          alt={`Avatar of ${question.author}`}
-          className="avatar"
-        />
-        <span>Would You Rather...</span>
-        <div className="option">
-          <button
-            className={
-              question.optionOne.votes.indexOf(authedUser) > -1
-                ? "question-option-selected"
-                : answered
-                ? "answered"
-                : ""
-            }
-            onClick={(event) => this.handleOptionClicked(1)}
-          >
-            {question.optionOne.text}
-          </button>
-          {answered && (
-            <span className="stats">
-              Votes: {question.optionOne.votes.length} ({percentVotesOptionOne}
-              %)
-            </span>
-          )}
-        </div>
-        <div className="option opt-offset">
-          <button
-            className={
-              question.optionTwo.votes.indexOf(authedUser) > -1
-                ? "question-option-two question-option-selected"
-                : answered
-                ? "question-option-two answered"
-                : "question-option-two"
-            }
-            onClick={(event) => this.handleOptionClicked(2)}
-          >
-            {question.optionTwo.text}
-          </button>
-          {answered && (
-            <span className="stats">
-              Votes: {question.optionTwo.votes.length} ({percentVotesOptionTwo}
-              %)
-            </span>
-          )}
+      <Link to={`/questions/${id}`}>
+        <div className="dashboard-list-container">
+          <div>
+            <div>
+              <div>{questionHeader} says:</div>
+            </div>
+            <div style={{ height: 110 }}>
+              <img src={user.avatarURL} style={{ height: 100, width: 100 }} />
+              <div className="verticle-divider"></div>
+              <div className="dashboard-list-question-info description">
+                <div className="ui header">Would you rather</div>
+                <div style={{ marginBottom: 8 }}>
+                  .... {questionDescription} ....
+                </div>
+                <div
+                  fluid
+                  basic
+                  color="teal"
+                  style={{ height: 30, fontSize: 12 }}
+                  onClick={this.handleViewPoll}
+                >
+                  View Poll
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </Link>
     );
   }
 }
 
-function mapStateToProps({ authedUser, users }) {
-  console.log(actions);
+function mapStateToProps({ questions, users }, { id }) {
+  const question = questions[id];
+  const user = users[question.author];
   return {
-    authedUser,
-    users,
+    question,
+    user,
   };
 }
 
-export default connect(mapStateToProps, actions)(Question);
+export default withRouter(connect(mapStateToProps)(Question));

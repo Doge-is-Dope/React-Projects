@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import {
   makeStyles,
-  Grid,
   Typography,
-  Paper,
   Avatar,
   Button,
   Container,
-  Link,
+  Select,
+  MenuItem,
   CssBaseline,
   Box,
 } from "@material-ui/core";
 import { setAuthedUser } from "../actions/authedUser";
 
 const Login = (props) => {
+  const userIds = Object.keys(props.users);
   const classes = useStyles();
   const [userId, setUserId] = useState(null);
   const [toHome, setToHome] = useState(false);
@@ -46,39 +46,49 @@ const Login = (props) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Welcome to the Would You Rather App!
+        <Typography component="h1" variant="h5" gutterBottom>
+          Would You Rather
         </Typography>
-        <p>Please sign in to continue</p>
+        <Typography variant="body1" color="textSecondary" align="center">
+          Sign in
+        </Typography>
+
+        <Avatar
+          className={classes.avatar}
+          src={userId && props.users[userId].avatarURL}
+        ></Avatar>
+
+        <form className={classes.form} noValidate>
+          <Select
+            className={classes.select}
+            value={selected}
+            onChange={(event) => handleSelectionChanged(event)}
+            variant="outlined"
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value={-1} disabled>
+              Select user
+            </MenuItem>
+            {userIds.map((id) => (
+              <MenuItem value={id} key={id}>
+                {id}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            disabled={!userId}
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        </form>
       </div>
-
-      <form className={classes.form} noValidate>
-        <select
-          value={selected}
-          onChange={(event) => handleSelectionChanged(event)}
-        >
-          <option value={-1} disabled>
-            Select user...
-          </option>
-          {props.users.map((id) => (
-            <option value={id} key={id}>
-              {id}
-            </option>
-          ))}
-        </select>
-      </form>
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-        disabled={!userId}
-        onClick={handleLogin}
-      >
-        Login
-      </Button>
       <Box mt={8}>
         <Copyright />
       </Box>
@@ -98,7 +108,7 @@ const Copyright = () => {
 const mapStateToProps = ({ users }) => {
   // console.log(`users: ${JSON.stringify(users)}`);
   return {
-    users: Object.keys(users),
+    users: users,
   };
 };
 export default withRouter(connect(mapStateToProps)(Login));
@@ -111,14 +121,20 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    width: 120,
+    height: 120,
+    margin: theme.spacing(6),
+    backgroundColor: theme.palette.grey[500],
   },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  select: {
+    width: "100%",
+    textAlign: "center",
+  },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(6, 0, 2),
   },
 }));

@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   makeStyles,
   Grid,
@@ -21,7 +21,7 @@ const Question = (props) => {
   };
 
   const classes = useStyles();
-  const { question, user, id } = props;
+  const { question, user } = props;
   const questionHeader = user.name;
   const questionDescription = question.optionOne.text;
 
@@ -88,10 +88,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
-    width: 128,
-    height: 128,
+    width: 100,
+    height: 100,
   },
   item: {
+    alignItems: "center",
     padding: theme.spacing(2),
   },
 }));

@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
-
+import {
+  makeStyles,
+  Grid,
+  Typography,
+  Paper,
+  Avatar,
+  Button,
+  Container,
+  Link,
+  CssBaseline,
+  Box,
+} from "@material-ui/core";
 import { setAuthedUser } from "../actions/authedUser";
 
 const Login = (props) => {
+  const classes = useStyles();
   const [userId, setUserId] = useState(null);
   const [toHome, setToHome] = useState(false);
   const selected = userId ? userId : -1;
@@ -31,13 +43,16 @@ const Login = (props) => {
   }
 
   return (
-    <div>
-      <div>
-        <h3>Welcome to the Would You Rather App!</h3>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          Welcome to the Would You Rather App!
+        </Typography>
         <p>Please sign in to continue</p>
       </div>
 
-      <div>
+      <form className={classes.form} noValidate>
         <select
           value={selected}
           onChange={(event) => handleSelectionChanged(event)}
@@ -51,12 +66,32 @@ const Login = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </form>
 
-      <button type="submit" disabled={userId === ""} onClick={handleLogin}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+        disabled={!userId}
+        onClick={handleLogin}
+      >
         Login
-      </button>
-    </div>
+      </Button>
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </Container>
+  );
+};
+
+const Copyright = () => {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © Chun-Chieh Liang "}
+      {new Date().getFullYear()}
+    </Typography>
   );
 };
 
@@ -67,3 +102,23 @@ const mapStateToProps = ({ users }) => {
   };
 };
 export default withRouter(connect(mapStateToProps)(Login));
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));

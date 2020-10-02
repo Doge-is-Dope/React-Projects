@@ -55,13 +55,12 @@ a {
 
 .btn {
   text-transform: uppercase;
-  margin: 35px auto;
+  margin: auto;
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.29);
   cursor: pointer;
   background: #fff;
   font-size: 16px;
-  width: 250px;
   position: relative;
 }
 
@@ -82,21 +81,16 @@ a {
 
 .active {
   font-weight: bold;
+  display: inline-block;
 }
 
 .nav ul {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   text-decoration: none;
+  overflow: hidden;
 }
 
-.nav li:first-child {
-  padding-left: 0;
-}
-
-ul {
-  padding-left: 0;
+.nav li {
+  float: left;
 }
 
 li {

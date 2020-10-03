@@ -91,6 +91,7 @@ a {
 
 .nav li {
   float: left;
+  line-height: 46px;
 }
 
 li {

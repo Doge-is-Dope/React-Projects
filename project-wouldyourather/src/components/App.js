@@ -8,6 +8,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Add from "./Add";
 import LeaderBoard from "./LeaderBoard";
+import Poll from "./Poll";
 import PrivateRoute from "./PrivateRoute";
 
 class App extends Component {
@@ -28,6 +29,11 @@ class App extends Component {
               <PrivateRoute path="/" exact component={Home} />
               <PrivateRoute path="/add" exact component={Add} />
               <PrivateRoute path="/leaderboard" exact component={LeaderBoard} />
+              <PrivateRoute
+                path="/questions/:question_id"
+                exact
+                component={Poll}
+              />
             </Switch>
           </div>
         </Fragment>

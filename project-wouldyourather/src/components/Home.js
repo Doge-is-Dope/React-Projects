@@ -9,8 +9,8 @@ const Home = (props) => {
   const { unansweredQuestions, answeredQuestions } = props;
 
   return (
-    <div>
-      <Paper className={classes.root}>
+    <div className={classes.root}>
+      <Paper square>
         <Tabs
           value={showAnswered}
           onChange={(event, newValue) => setShowAnswered(newValue)}
@@ -23,7 +23,7 @@ const Home = (props) => {
         </Tabs>
       </Paper>
 
-      <div className={classes.root}>
+      <div className={classes.pane}>
         {showAnswered
           ? answeredQuestions.map((questionId) => (
               <li key={questionId}>
@@ -63,8 +63,11 @@ function mapStateToProps({ authedUser, questions }) {
 
 export default connect(mapStateToProps)(Home);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-});
+  pane: {
+    marginTop: theme.spacing(1),
+  },
+}));

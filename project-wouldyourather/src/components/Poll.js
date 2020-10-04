@@ -8,18 +8,18 @@ import {
   Paper,
   Button,
   Avatar,
-  Card,
   RadioGroup,
   Radio,
   FormControl,
   FormControlLabel,
   Divider,
   Typography,
+  LinearProgress,
   makeStyles,
+  withStyles,
 } from "@material-ui/core";
 
 const Poll = (props) => {
-  const classes = useStyles();
   const {
     dispatch,
     question,
@@ -133,8 +133,11 @@ const UnansweredCard = (props) => {
 
 const AnsweredCard = (props) => {
   const classes = useStyles();
-  const [selected, setSelected] = useState("");
-  const { selectedAnswer, authedUser, question, author } = props;
+  const { selectedAnswer, question, author } = props;
+
+  const optionOneVotes = question.optionOne.votes.length;
+  const optionTwoVotes = question.optionTwo.votes.length;
+  const totalVotes = optionOneVotes + optionTwoVotes;
 
   return (
     <div className={classes.root}>
@@ -144,21 +147,95 @@ const AnsweredCard = (props) => {
           className={classes.title}
           color="textSecondary"
         >
-          {author.name} asks
+          Asked by {author.name}
         </Typography>
 
         <Divider />
         <Grid container spacing={2} justify="space-evenly" alignItems="center">
           <Grid item>
-            <Avatar src={author.avatarURL} className={classes.avatar} />
+            <Avatar
+              src={author.avatarURL}
+              alt={`avatar of ${author.name}`}
+              className={classes.avatar}
+            />
           </Grid>
 
-          <Grid item xs={12} sm container direction="column"></Grid>
+          <Grid item xs={12} sm container direction="column">
+            <div className={classes.formControl}>
+              <Typography variant="h6">Results</Typography>
+
+              <OptionCard
+                option={question.optionOne}
+                totalVotes={totalVotes}
+                currentVotes={optionOneVotes}
+                isSelected={selectedAnswer === "optionOne"}
+              />
+
+              <Divider className={classes.divider} />
+
+              <OptionCard
+                option={question.optionTwo}
+                totalVotes={totalVotes}
+                currentVotes={optionTwoVotes}
+                isSelected={selectedAnswer === "optionTwo"}
+              />
+            </div>
+          </Grid>
         </Grid>
       </Paper>
     </div>
   );
 };
+
+const OptionCard = (props) => {
+  const classes = useStyles();
+  const { option, isSelected, currentVotes, totalVotes } = props;
+  return (
+    <Paper
+      className={classes.paper}
+      variant="outlined"
+      style={{ backgroundColor: isSelected && "#e3f2fd" }}
+    >
+      {isSelected && (
+        <div className={`ribbon ribbon-top-right`}>
+          <span />
+        </div>
+      )}
+      <Typography variant="h6" gutterBottom>
+        {option.text}
+      </Typography>
+
+      <BorderLinearProgress
+        variant="determinate"
+        value={(currentVotes / totalVotes) * 100}
+      />
+
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        align="center"
+        className={classes.votesDesc}
+      >
+        {currentVotes} out of {totalVotes}
+      </Typography>
+    </Paper>
+  );
+};
+
+const BorderLinearProgress = withStyles((theme) => ({
+  root: {
+    height: 16,
+    borderRadius: 5,
+  },
+  colorPrimary: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.type === "light" ? 300 : 700],
+  },
+  bar: {
+    borderRadius: 5,
+    backgroundColor: "#1a90ff",
+  },
+}))(LinearProgress);
 
 function mapStateToProps({ authedUser, questions, users }, { match }) {
   const questionId = match.params.question_id;
@@ -203,6 +280,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     margin: "auto",
     maxWidth: 500,
+    position: "relative",
   },
   avatar: {
     width: 100,
@@ -216,5 +294,22 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1, 1, 0, 0),
+  },
+  divider: {
+    margin: theme.spacing(2),
+  },
+  votesDesc: {
+    margin: theme.spacing(1, 1, 0, 0),
+  },
+
+  ribbon: {
+    background: "rebeccapurple",
+    color: "white",
+    padding: "0 16px",
+    position: "absolute",
+    top: 0,
+    right: 0,
+    transform: "translateX(30%) translateY(0%) rotate(45deg)",
+    overflow: "hidden",
   },
 }));

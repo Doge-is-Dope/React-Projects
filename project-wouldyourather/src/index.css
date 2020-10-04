@@ -99,3 +99,44 @@ li {
   padding: 10px;
   text-decoration: none;
 }
+
+/* common */
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 280px;
+  padding: 8px 0;
+  background-color: #fbc02d;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* top right*/
+.ribbon-top-right {
+  top: -1px;
+  right: -1px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 0;
+}
+.ribbon-top-right::after {
+  bottom: 0;
+  right: 0;
+}
+.ribbon-top-right span {
+  left: -3px;
+  top: 2px;
+  transform: rotate(45deg);
+}

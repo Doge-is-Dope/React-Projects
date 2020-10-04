@@ -1,70 +1,220 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { connect } from "react-redux";
 import { handleAddAnswer } from "../actions/questions";
 import { withRouter } from "react-router-dom";
-import { Button, Card, Checkbox } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Button,
+  Avatar,
+  Card,
+  RadioGroup,
+  Radio,
+  FormControl,
+  FormControlLabel,
+  Divider,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
 
-class Poll extends Component {
-  state = {
-    selectedCheckbox: "",
+const Poll = (props) => {
+  const classes = useStyles();
+  const {
+    dispatch,
+    question,
+    selectedAnswer,
+    author,
+    isError,
+    authedUser,
+  } = props;
+
+  if (isError) {
+    return <div>error</div>;
+  }
+  return (
+    <>
+      {selectedAnswer ? (
+        <AnsweredCard
+          selectedAnswer={selectedAnswer}
+          authedUser={authedUser}
+          author={author}
+          question={question}
+        />
+      ) : (
+        <UnansweredCard
+          dispatch={dispatch}
+          authedUser={authedUser}
+          author={author}
+          question={question}
+        />
+      )}
+    </>
+  );
+};
+
+const UnansweredCard = (props) => {
+  const classes = useStyles();
+  const [selected, setSelected] = useState("");
+  const { dispatch, authedUser, question, author } = props;
+
+  const handleChange = (e) => {
+    setSelected(e.target.value);
   };
 
-  handleChange = (e, { value }) => {
-    this.setState({ selectedCheckbox: value });
-  };
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { dispatch, authedUser, id } = this.props;
-    const { selectedCheckbox } = this.state;
 
-    if (selectedCheckbox !== null) {
+    if (selected !== "") {
       dispatch(
         handleAddAnswer({
-          authedUser: authedUser,
-          questionId: id,
-          answer: selectedCheckbox,
+          authedUser,
+          questionId: question.id,
+          answer: selected,
         })
       );
     }
   };
 
-  render() {
-    const { question, authorAvatar, isError, userName, answer } = this.props;
-  }
-}
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Typography
+          variant="subtitle1"
+          className={classes.title}
+          color="textSecondary"
+        >
+          {author.name} asks
+        </Typography>
+
+        <Divider />
+        <Grid container spacing={2} justify="space-evenly" alignItems="center">
+          <Grid item>
+            <Avatar src={author.avatarURL} className={classes.avatar} />
+          </Grid>
+
+          <Grid item xs={12} sm container direction="column">
+            <FormControl className={classes.formControl}>
+              <Typography variant="h6">Would you rather...</Typography>
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={selected}
+                onChange={handleChange}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  value="optionOne"
+                  label={question.optionOne.text}
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  value="optionTwo"
+                  label={question.optionTwo.text}
+                />
+              </RadioGroup>
+
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                className={classes.button}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Paper>
+    </div>
+  );
+};
+
+const AnsweredCard = (props) => {
+  const classes = useStyles();
+  const [selected, setSelected] = useState("");
+  const { selectedAnswer, authedUser, question, author } = props;
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Typography
+          variant="subtitle1"
+          className={classes.title}
+          color="textSecondary"
+        >
+          {author.name} asks
+        </Typography>
+
+        <Divider />
+        <Grid container spacing={2} justify="space-evenly" alignItems="center">
+          <Grid item>
+            <Avatar src={author.avatarURL} className={classes.avatar} />
+          </Grid>
+
+          <Grid item xs={12} sm container direction="column"></Grid>
+        </Grid>
+      </Paper>
+    </div>
+  );
+};
 
 function mapStateToProps({ authedUser, questions, users }, { match }) {
-  if (questions[match.params.question_id] === undefined) {
-    const isError = true;
+  const questionId = match.params.question_id;
+  const question = questions[questionId];
+
+  // question not found
+  if (question === undefined) {
     return {
-      isError,
+      isError: true,
     };
   }
-  const userName = users[questions[match.params.question_id].author].name;
-  const id = match.params.question_id;
-  const question = questions[id];
 
-  let answer = "";
-  if (question.optionOne.votes.includes(authedUser)) {
-    answer = "optionOne";
-  } else if (question.optionTwo.votes.includes(authedUser)) {
-    answer = "optionTwo";
-  } else {
-    answer = null;
-  }
-  const authorAvatar = users[question.author].avatarURL;
+  const author = users[question.author];
   const isError = false;
+
+  let selectedAnswer = null;
+  if (question.optionOne.votes.includes(authedUser)) {
+    selectedAnswer = "optionOne";
+  } else if (question.optionTwo.votes.includes(authedUser)) {
+    selectedAnswer = "optionTwo";
+  } else {
+    selectedAnswer = null;
+  }
+
   return {
-    id,
+    questionId,
     question,
-    answer,
-    authedUser,
-    userName,
-    authorAvatar,
+    selectedAnswer,
+    author,
     isError,
+    authedUser,
   };
 }
 
 export default withRouter(connect(mapStateToProps)(Poll));
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: "auto",
+    maxWidth: 500,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+  },
+  title: {
+    marginBottom: theme.spacing(1),
+  },
+  formControl: {
+    margin: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1, 1, 0, 0),
+  },
+}));

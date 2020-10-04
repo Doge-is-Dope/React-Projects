@@ -9,6 +9,7 @@ import Home from "./Home";
 import Add from "./Add";
 import LeaderBoard from "./LeaderBoard";
 import Poll from "./Poll";
+import NotFound from "./NotFound";
 import PrivateRoute from "./PrivateRoute";
 
 class App extends Component {
@@ -34,6 +35,7 @@ class App extends Component {
                 exact
                 component={Poll}
               />
+              <Route component={NotFound} />
             </Switch>
           </div>
         </Fragment>

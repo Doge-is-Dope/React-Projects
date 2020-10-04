@@ -120,6 +120,7 @@ const UnansweredCard = (props) => {
                 fullWidth
                 className={classes.button}
                 onClick={handleSubmit}
+                disabled={selected === ""}
               >
                 Submit
               </Button>

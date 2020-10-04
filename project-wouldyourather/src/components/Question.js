@@ -28,7 +28,7 @@ const Question = (props) => {
     // <Link to={`/questions/${id}`}>
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justify="space-evenly" alignItems="center">
           <Grid item>
             <Avatar
               src={user.avatarURL}
@@ -41,8 +41,6 @@ const Question = (props) => {
             <Typography gutterBottom variant="subtitle1" color="primary">
               {user.name} says
             </Typography>
-
-            <div className="verticle-divider"></div>
 
             <Typography variant="body2" gutterBottom>
               Would you rather

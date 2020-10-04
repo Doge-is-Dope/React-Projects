@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { makeStyles, Paper, Tabs, Tab, Grid } from "@material-ui/core";
+import { makeStyles, Paper, Tabs, Tab } from "@material-ui/core";
 import Question from "./Question";
 
 const Home = (props) => {
@@ -23,15 +23,19 @@ const Home = (props) => {
         </Tabs>
       </Paper>
 
-      <Grid container direction="column" alignContent="center">
+      <div className={classes.root}>
         {showAnswered
           ? answeredQuestions.map((questionId) => (
-              <Question key={questionId} id={questionId} />
+              <li key={questionId}>
+                <Question id={questionId} />
+              </li>
             ))
           : unansweredQuestions.map((questionId) => (
-              <Question key={questionId} id={questionId} />
+              <li key={questionId}>
+                <Question id={questionId} />
+              </li>
             ))}
-      </Grid>
+      </div>
     </div>
   );
 };

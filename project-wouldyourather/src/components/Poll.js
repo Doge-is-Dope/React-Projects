@@ -18,6 +18,7 @@ import {
   makeStyles,
   withStyles,
 } from "@material-ui/core";
+import NotFound from "./NotFound";
 
 const Poll = (props) => {
   const {
@@ -30,7 +31,7 @@ const Poll = (props) => {
   } = props;
 
   if (isError) {
-    return <div>error</div>;
+    return <NotFound />;
   }
   return (
     <>

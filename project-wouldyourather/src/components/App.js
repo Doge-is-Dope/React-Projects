@@ -17,26 +17,36 @@ class App extends Component {
     this.props.dispatch(handleInitialData());
   }
   render() {
-    const { loading } = this.props;
+    const { authedUser } = this.props;
 
     return (
       <Router>
         <Fragment>
           <LoadingBar />
           <div className="container">
-            {!loading && <Nav />}
-            <Switch>
-              <Route path="/login" exact component={Login} />
-              <PrivateRoute path="/" exact component={Home} />
-              <PrivateRoute path="/add" exact component={Add} />
-              <PrivateRoute path="/leaderboard" exact component={LeaderBoard} />
-              <PrivateRoute
-                path="/questions/:question_id"
-                exact
-                component={Poll}
-              />
-              <Route component={NotFound} />
-            </Switch>
+            {authedUser === null ? (
+              <Route render={() => <Login />} />
+            ) : (
+              <>
+                <Nav />
+                <Switch>
+                  {/* <Route path="/login" exact component={Login} /> */}
+                  <PrivateRoute path="/" exact component={Home} />
+                  <PrivateRoute path="/add" exact component={Add} />
+                  <PrivateRoute
+                    path="/leaderboard"
+                    exact
+                    component={LeaderBoard}
+                  />
+                  <PrivateRoute
+                    path="/questions/:question_id"
+                    exact
+                    component={Poll}
+                  />
+                  <Route component={NotFound} />
+                </Switch>
+              </>
+            )}
           </div>
         </Fragment>
       </Router>
@@ -46,7 +56,7 @@ class App extends Component {
 
 function mapStateToProps({ authedUser }) {
   return {
-    loading: authedUser === null,
+    authedUser,
   };
 }
 

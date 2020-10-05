@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import {
   Grid,
   TextField,
@@ -15,10 +15,12 @@ const Add = (props) => {
   const classes = useStyles();
   const [optionOne, setOptionOne] = useState("");
   const [optionTwo, setOptionTwo] = useState("");
+  const authedUser = useSelector((state) => state.authedUser);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { dispatch, authedUser, history } = props;
+    const { history } = props;
 
     if (optionOne && optionTwo) {
       // console.log(`option 1: ${optionOne}`);
